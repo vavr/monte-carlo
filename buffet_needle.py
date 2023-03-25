@@ -68,7 +68,7 @@ def main():
                 pi_value = 0
             if i % 1000 == 0:
                 if need_result != 0:
-                    piValue['text'] = pi_value
+                    piValue['text'] = f"{pi_value:.{8}f}"
                 drawArea.update()
             graphResults.drawValueOnGraph(i, pi_value)
 

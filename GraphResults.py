@@ -1,4 +1,5 @@
 from tkinter import *
+import CanvasTooltip as tooltip
 
 import math
 
@@ -95,7 +96,8 @@ class GraphResults:
 
             # print(pi_value, need_y, iteration_text, iteration, already_draw)
 
-            self.canvas.create_oval(need_x, need_y, need_x + 3, need_y + 3, fill='black')
+            canvasPointId = self.canvas.create_oval(need_x, need_y, need_x + 3, need_y + 3, fill='black')
+            tooltip.CanvasTooltip(canvas=self.canvas, tag_or_id=canvasPointId, text=pi_value)
             # if already_draw % 3 == 0:
             self.canvas.create_text(need_x, self.height - self.bottom_pad + 10, text=str(iteration_text),
                                     fill="purple",

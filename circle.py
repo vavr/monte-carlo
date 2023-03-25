@@ -1,5 +1,7 @@
 import random
 from tkinter import *
+from tktooltip import ToolTip
+
 
 import GraphResults as gr
 
@@ -63,7 +65,7 @@ def main():
             drawPoint(x, y)
             graphResults.drawValueOnGraph(i, pi_value)
             if i % 1000 == 0:
-                piValue['text'] = pi_value
+                piValue['text'] = f"{pi_value:.{8}f}"
                 drawArea.update()
             iterValue['text'] = i
 
@@ -117,9 +119,13 @@ def main():
 
     panel.pack(fill=X, padx=4, pady=4)
     clearButton.pack(side=LEFT)
+    ToolTip(clearButton, msg="Отчистить все данные и вернуться в изначальное состояние", follow=True)
     startButton.pack(side=LEFT)
+    ToolTip(startButton, msg="Начать", follow=True)
     stopButton.pack(side=LEFT)
+    ToolTip(stopButton, msg="Остановить", follow=True)
     drawButton.pack(side=LEFT)
+    ToolTip(drawButton, msg="Приостановить рисование, но останутся вычисления", follow=True)
 
     radiusValue = Entry(panel, width=5)
     radiusValue.bind("<Return>", change_radius)
