@@ -6,15 +6,16 @@ import GraphPlot as gp
 
 need_stop = False
 need_to_draw = True
-R = 50
-L = 1
+R = 30
+L = 30
 N = 1000000
 
 
 def main():
+    width = 1800
     rootWindow = Tk()
     rootWindow.title("PI via monte carlo method")
-    rootWindow.geometry("800x800")
+    rootWindow.geometry(str(width) + 'x' + str(width))
 
     panel = Frame(rootWindow)
     drawArea = Canvas(rootWindow, bg="white")
@@ -24,8 +25,8 @@ def main():
         global need_stop
         need_stop = False
 
-        for i in range(800 // R):
-            drawArea.create_line(i * R, 0, i * R, 800, width=1)
+        for i in range(width // R):
+            drawArea.create_line(i * R, 0, i * R, width, width=1)
 
     def is_line_crossed(x1, x2):
         x_left = (x1 // R) * R
@@ -54,8 +55,8 @@ def main():
                 return
 
             # random x coordinate the end of needle
-            x1 = random.uniform(R, 800 - R)
-            y1 = random.uniform(R, 800 - R)
+            x1 = random.uniform(R, width - R)
+            y1 = random.uniform(L, width - L)
             # random x coordinate the other end of needle
             rand_alpha = random.uniform(0, 360)
             x2 = x1 + L * math.cos(math.radians(rand_alpha))
