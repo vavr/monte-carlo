@@ -2,12 +2,14 @@ import math
 import random
 from tkinter import *
 
-import GraphResults as gr
+import GraphPlot as gp
 
 need_stop = False
 need_to_draw = True
 R = 50
+L = 1
 N = 1000000
+
 
 def main():
     rootWindow = Tk()
@@ -16,7 +18,7 @@ def main():
 
     panel = Frame(rootWindow)
     drawArea = Canvas(rootWindow, bg="white")
-    graphResults = gr.GraphResults(50)
+    graph = gp.GraphPlot()
 
     def startupPosition():
         global need_stop
@@ -24,7 +26,6 @@ def main():
 
         for i in range(800 // R):
             drawArea.create_line(i * R, 0, i * R, 800, width=1)
-        graphResults.drawStartPosition()
 
     def is_line_crossed(x1, x2):
         x_left = (x1 // R) * R
@@ -47,6 +48,7 @@ def main():
         clear()
         global need_stop, N
         need_result = 0
+
         for i in range(N):
             if need_stop:
                 return
@@ -56,21 +58,21 @@ def main():
             y1 = random.uniform(R, 800 - R)
             # random x coordinate the other end of needle
             rand_alpha = random.uniform(0, 360)
-            x2 = x1 + R * math.cos(math.radians(rand_alpha))
-            y2 = y1 + R * math.sin(math.radians(rand_alpha))
+            x2 = x1 + L * math.cos(math.radians(rand_alpha))
+            y2 = y1 + L * math.sin(math.radians(rand_alpha))
 
             if is_line_crossed(x1, x2):
                 need_result += 1
             drawNeedle(x1, y1, x2, y2)
             if need_result != 0:
-                pi_value = (2 * (i + 1)) / need_result
+                pi_value = (2 * (i + 1) * L) / (need_result * R)
             else:
                 pi_value = 0
             if i % 1000 == 0:
                 if need_result != 0:
                     piValue['text'] = f"{pi_value:.{8}f}"
                 drawArea.update()
-            graphResults.drawValueOnGraph(i, pi_value)
+                graph.draw_value(i, pi_value)
 
             iterValue['text'] = i
 
@@ -80,7 +82,7 @@ def main():
 
     def clear():
         drawArea.delete("all")
-        graphResults.clear()
+        graph.clear()
         startupPosition()
         iterValue['text'] = 0
         piValue['text'] = 0
@@ -88,6 +90,12 @@ def main():
     def change_radius(e):
         global R, need_stop
         R = int(e.widget.get())
+        need_stop = True
+        clear()
+
+    def change_line_size(e):
+        global L, need_stop
+        L = int(e.widget.get())
         need_stop = True
         clear()
 
@@ -133,6 +141,12 @@ def main():
     radiusLabel.pack(side=LEFT)
     radiusValue.pack(side=LEFT)
 
+    lSizeValue = Entry(panel, width=5)
+    lSizeValue.bind("<Return>", change_line_size)
+    lSizeLabel = Label(panel, text="Длина иглы: ")
+    lSizeLabel.pack(side=LEFT)
+    lSizeValue.pack(side=LEFT)
+
     nValue = Entry(panel, width=10)
     nValue.bind("<Return>", change_n)
     nLabel = Label(panel, text="К-во итераций: ")
@@ -141,13 +155,14 @@ def main():
 
     drawArea.pack(fill=BOTH, side=TOP, expand=True, padx=4, pady=4)
 
-    radiusValue.insert(0, R)
-    nValue.insert(1000, N)
+    radiusValue.insert(0, str(R))
+    lSizeValue.insert(0, str(L))
+    nValue.insert(1000, str(N))
 
     startupPosition()
 
+    graph.plt.show()
     rootWindow.mainloop()
-    graphResults.window.mainloop()
 
 
 if __name__ == "__main__":

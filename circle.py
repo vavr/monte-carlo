@@ -1,9 +1,9 @@
 import random
 from tkinter import *
+
 from tktooltip import ToolTip
 
-
-import GraphResults as gr
+import GraphPlot as gp
 
 need_stop = False
 need_to_draw = True
@@ -11,6 +11,7 @@ R = 300
 x_center = 100 + R
 y_center = 100 + R
 N = 1000000
+
 
 def main():
     rootWindow = Tk()
@@ -20,7 +21,7 @@ def main():
     panel = Frame(rootWindow)
     drawArea = Canvas(rootWindow, bg="white")
 
-    graphResults = gr.GraphResults(50)
+    graph = gp.GraphPlot()
 
     def set_center():
         global x_center, y_center
@@ -34,7 +35,6 @@ def main():
         set_center()
         drawArea.create_rectangle(100, 100, R * 2 + 100, R * 2 + 100, fill="", outline="black", width=2)
         drawArea.create_oval(100, 100, R * 2 + 100, R * 2 + 100, fill="", outline="black", width=2)
-        graphResults.drawStartPosition()
 
     def in_circle(x, y):
         return (x - x_center) ** 2 + (y - y_center) ** 2 <= R ** 2
@@ -63,7 +63,7 @@ def main():
                 need_result += 1
             pi_value = (need_result / i) * 4
             drawPoint(x, y)
-            graphResults.drawValueOnGraph(i, pi_value)
+            graph.draw_value(i, pi_value)
             if i % 1000 == 0:
                 piValue['text'] = f"{pi_value:.{8}f}"
                 drawArea.update()
@@ -75,7 +75,7 @@ def main():
 
     def clear():
         drawArea.delete("all")
-        graphResults.clear()
+        graph.clear()
 
         startupPosition()
         iterValue['text'] = 0
@@ -141,13 +141,13 @@ def main():
 
     drawArea.pack(fill=BOTH, side=TOP, expand=True, padx=4, pady=4)
 
-    radiusValue.insert(0, R)
-    nValue.insert(1000, N)
+    radiusValue.insert(0, str(R))
+    nValue.insert(1000, str(N))
 
     startupPosition()
 
+    graph.plt.show()
     rootWindow.mainloop()
-    graphResults.window.mainloop()
 
 
 if __name__ == "__main__":
